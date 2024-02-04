@@ -42,7 +42,7 @@ links = {
 # Define nodes for the Sankey diagram
 nodes = {
     'label': labels,
-    'pad': 15,  # Padding between nodes
+    'pad': 50,  # Padding between nodes
     'thickness': 15  # Thickness of the nodes
 }
 
