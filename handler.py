@@ -1,66 +1,62 @@
 import plotly.graph_objects as go
 
-# Define the values for the nodes
-revenue_operations = 3359.58
-other_income = 86.09
-medical_consumables = 426.97
-employee_benefits = 434.25
-finance_costs = 142.62
-depreciation_amortization = 276.60
-professional_fees_doctors = 772.11
-other_expenses = 545.47
-total_income = revenue_operations + other_income
-total_expenses = medical_consumables + employee_benefits + finance_costs + depreciation_amortization + professional_fees_doctors + other_expenses
-profit_before_tax = total_income - total_expenses
-current_tax = 235.67
-deferred_tax = -13.75
-total_tax_expense = current_tax + deferred_tax
-profit_for_period = profit_before_tax - total_tax_expense
-other_comprehensive_income = 1.46
-total_comprehensive_income = profit_for_period + other_comprehensive_income
+# Define the labels for the nodes
+labels = [
+    'Revenue from operations',  # 0
+    'Other Income',             # 1
+    'Total Income',             # 2
+    'Total Expenses',           # 3
+    'Profit before Tax',        # 4
+    'Medical Consumables',      # 5
+    'Employee Benefits',        # 6
+    'Finance Costs',            # 7
+    'Depreciation',             # 8
+    'Professional Fees',        # 9
+    'Other Expenses',           # 10
+    'Current Tax',              # 11
+    'Deferred Tax',             # 12
+    'Profit for Period'         # 13
+]
 
-# Define the Sankey diagram data
-data = go.Sankey(
-    node=dict(
-        pad=15,
-        thickness=15,
-        line=dict(color="black", width=0.5),
-        label=[
-            "Revenue from Operations", "Other Income", "Total Income",
-            "Medical Consumables", "Employee Benefits", "Finance Costs",
-            "Depreciation & Amortization", "Professional Fees to Doctors", "Other Expenses",
-            "Total Expenses", "Profit Before Tax", "Current Tax", "Deferred Tax",
-            "Profit for Period", "Other Comprehensive Income", "Total Comprehensive Income"
-        ],
-        color="blue"
-    ),
-    link=dict(
-        source=[0, 1, 2, 2, 2, 2, 2, 2, 9, 10, 10, 11, 12, 13],
-        target=[2, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 13, 14],
-        value=[
-            revenue_operations, other_income, medical_consumables, employee_benefits, finance_costs,
-            depreciation_amortization, professional_fees_doctors, other_expenses, profit_before_tax,
-            current_tax, deferred_tax, profit_for_period, other_comprehensive_income, total_comprehensive_income
-        ],
-        label=[
-            str(revenue_operations), str(other_income), str(medical_consumables), str(employee_benefits), 
-            str(finance_costs), str(depreciation_amortization), str(professional_fees_doctors), str(other_expenses), 
-            str(profit_before_tax), str(current_tax), str(deferred_tax), str(profit_for_period), 
-            str(other_comprehensive_income), str(total_comprehensive_income)
-        ]
-    )
+# Define the flows (source to target)
+links = {
+    'source': [0, 1, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4],  # Indices of the source nodes
+    'target': [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], # Indices of the target nodes
+    'value':  [
+        3359.58,  # Revenue from operations to Total Income
+        86.09,    # Other Income to Total Income
+        2598.02,  # Total Income to Total Expenses
+        847.65,   # Total Income to Profit before Tax
+        426.97,   # Total Expenses to Medical Consumables
+        434.25,   # Total Expenses to Employee Benefits
+        142.62,   # Total Expenses to Finance Costs
+        276.60,   # Total Expenses to Depreciation
+        772.11,   # Total Expenses to Professional Fees
+        545.47,   # Total Expenses to Other Expenses
+        235.67,   # Profit before Tax to Current Tax
+        13.75,    # Profit before Tax to Deferred Tax
+        598.23    # Profit before Tax to Profit for Period (Assuming this is the remainder after taxes)
+    ]
+}
+
+# Define nodes for the Sankey diagram
+nodes = {
+    'label': labels,
+    'pad': 15,  # Padding between nodes
+    'thickness': 15  # Thickness of the nodes
+}
+
+# Create the Sankey Diagram
+fig = go.Figure(data=[go.Sankey(
+    node=nodes,
+    link=links
+)])
+
+# Update the layout of the figure
+fig.update_layout(
+    title_text="Financial Sankey Diagram for Q3 FY24",
+    font_size=10
 )
-
-# Define the layout of the diagram
-layout = go.Layout(
-    title=dict(
-        text="Sankey Diagram for Rainbow Children's Medicare Limited Income Statement",
-        font=dict(size=16)
-    )
-)
-
-# Create the figure
-fig = go.Figure(data=[data], layout=layout)
 
 # Show the figure
 fig.show()
